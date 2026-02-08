@@ -78,7 +78,49 @@ function reset() {
     placeButtonsCentered();
 }
 
-window.addEventListener('load', placeButtonsCentered);
+const i18n = {
+    pl: {
+        title: 'Czy zostaniesz moją walentynką?',
+        yes: 'Tak',
+        no: 'Nie',
+        see_you: 'widzimy się 14.02',
+        return: 'powrót',
+        page_title: 'Walentynki'
+    },
+    en: {
+        title: 'Will you be my Valentine?',
+        yes: 'Yes',
+        no: 'No',
+        see_you: 'see you on 14.02',
+        return: 'return',
+        page_title: 'Valentine\'s Day'
+    }
+};
+
+const langBtn = document.getElementById('lang-toggle');
+
+let currentLang = 'en';
+
+function applyLanguage(lang) {
+    currentLang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.textContent = i18n[lang][key] || el.textContent;
+    });
+    document.title = i18n[lang].page_title;
+    langBtn.textContent = lang === 'pl' ? 'EN' : 'PL';
+}
+
+function initLanguage() {
+    const auto = (navigator.language || 'en').toLowerCase().startsWith('pl') ? 'pl' : 'en';
+    applyLanguage(auto);
+}
+
+langBtn.addEventListener('click', () => {
+    applyLanguage(currentLang === 'pl' ? 'en' : 'pl');
+});
+
+window.addEventListener('load', () => { placeButtonsCentered(); initLanguage(); });
 window.addEventListener('resize', placeButtonsCentered);
 noBtn.addEventListener('mouseenter', moveNoButton);
 noBtn.addEventListener('click', moveNoButton);
